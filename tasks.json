@@ -1,0 +1,18 @@
+[
+    {
+        "title": "A",
+        "description": "Pierwsze zadanie",
+        "completed": false,
+        "date_created": "2025-08-14T19:55:56.921025",
+        "deadline": null,
+        "priority": "HIGH"
+    },
+    {
+        "title": "B",
+        "description": "Drugie zadanie",
+        "completed": true,
+        "date_created": "2025-08-14T19:55:56.921025",
+        "deadline": null,
+        "priority": "LOW"
+    }
+]
