@@ -11,7 +11,6 @@ from datetime import datetime, timedelta
 
 def test_add_task(user):
     """Dodawanie taska"""
-    #user = User("Magda")
     user.add_task("Zrobić zakupy", "Kupić mleko i chleb")
 
     task = user.find_task("Zrobić zakupy")
@@ -108,14 +107,12 @@ def test_show_pending_tasks(user_with_pending_and_completed_tasks, capsys):
 
 def test_show_completed_tasks_empty(user,capsys):
     """Żaden task nie był wykonany"""
-    #user = User("Magda")
     user.show_completed_tasks()
     captured = capsys.readouterr()
     assert "Brak wykonanych zadań." in captured.out
 
 def test_show_pending_tasks_empty(user,capsys):
     """Żaden task nie czeka na wykonanie"""
-    #user = User("Magda")
     user.show_pending_tasks()
     captured = capsys.readouterr()
     assert "Brak zadań do wykonania." in captured.out
@@ -153,7 +150,6 @@ def test_task_list_debug():
     todo.add_task(Task("A", "Opis 1", priority=Priority.LOW))
     todo.add_task(Task("B", "Opis 2", completed=True, priority=Priority.HIGH))
 
-
     assert len(todo.tasks) == 2
 
 def test_task_priority_set():
@@ -172,21 +168,14 @@ def test_priority_saved_and_loaded_all_levels(tmp_path, priority):
     todo = ToDoList()
     todo.add_task(Task("Test", "Opis", priority=priority))
 
-    # Ścieżka do pliku tymczasowego
-    file_path = tmp_path / "tasks.json"
 
-    # Zapisujemy do pliku
-    todo.save_to_file(str(file_path))
-
-    # Wczytujemy z nowej instancji
-    new_todo = ToDoList()
+    file_path = tmp_path / "tasks.json"     # Ścieżka do pliku tymczasowego
+    todo.save_to_file(str(file_path))     # Zapisujemy do pliku
+    new_todo = ToDoList()     # Wczytujemy z nowej instancji
     new_todo.load_from_file(str(file_path))
+    loaded_task = new_todo.find_task("Test")     # Pobieramy zadanie po tytule
 
-    # Pobieramy zadanie po tytule
-    loaded_task = new_todo.find_task("Test")
-
-    # Sprawdzamy czy priorytet się zgadza
-    assert loaded_task.priority == priority, (
+    assert loaded_task.priority == priority, (     # Sprawdzamy czy priorytet się zgadza
         f"Priorytet wczytanego zadania ({loaded_task.priority}) "
         f"różni się od zapisanego ({priority})"
     )

@@ -8,7 +8,6 @@ class User:
         self.todo_list = ToDoList()
 
     def get_filename(self):
-        #return f"{self.name}_tasks.json"
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         return os.path.join(base_dir, f"{self.name}_tasks.json")
 
@@ -32,7 +31,6 @@ class User:
 
     def show_all_tasks(self):
         self.todo_list.show_all_tasks()
-
 
     def show_completed_tasks(self):
         self.todo_list.show_completed_tasks()
