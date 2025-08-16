@@ -27,7 +27,7 @@ def main():
         print("7. Zapisz i wyjdź")
         print("8. Sortuj")
 
-        choice = input("Wybierz opcję: ").strip()
+        choice = input("Wybierz opcj sortowania: ").strip()
 
         if choice == "1":
             title = input("Tytuł zadania: ")
@@ -47,7 +47,7 @@ def main():
             priority = priority_map.get(prio_choice, Priority.MEDIUM)
             user.add_task(title, description, deadline=deadline, priority=priority)
 
-            print("Dodano zadanie.")
+            print("\nDodano zadanie.")
         elif choice == "2":
             print("\nTwoje zadania: ")
             user.show_all_tasks()
@@ -76,8 +76,8 @@ def main():
         elif choice == "8":
             print("Sortuj według: ")
             print("1. Tytuł")
-            print("2. Data utworzenia: ")
-            print("3. Deadline: ")
+            print("2. Data utworzenia")
+            print("3. Deadline")
             print("4. Priorytet")
             sort_choice = input("Wybierz: ").strip()
             sort_map = {
