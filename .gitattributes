@@ -1,0 +1,4 @@
+*.py linguist-language=Python
+*.html linguist-language=HTML
+report.html linguist-vendored
+reports/*.html linguist-vendored
