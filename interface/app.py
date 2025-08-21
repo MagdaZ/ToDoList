@@ -3,8 +3,32 @@ from datetime import datetime
 from todo.user import User
 from todo.task import Priority
 
-def main():
+"""
+This is a simple console-based To-Do List application.
 
+Users can:
+- Add tasks with optional deadlines and priority
+- View all tasks, completed tasks, or pending tasks
+- Mark tasks as completed
+- Remove tasks
+- Save tasks to a file and load them on next run
+- Sort tasks by title, creation date, deadline, or priority
+"""
+def main():
+    """
+    Main function to run the interactive to-do list application.
+
+    It prompts the user for their name and loads their tasks from a file if it exists.
+    Users are then presented with a menu to manage their tasks.
+
+    Features include:
+    - Adding tasks with title, description, deadline, and priority
+    - Showing all tasks, completed tasks, or tasks to do
+    - Marking tasks as completed
+    - Removing tasks
+    - Saving tasks to a JSON file and exiting the application
+    - Sorting tasks by title, creation date, deadline, or priority
+    """
 
     user_name = input("Enter your name: ").strip()
     user = User(user_name)
@@ -27,7 +51,7 @@ def main():
         print("7. Save and exit")
         print("8. Sorting")
 
-        choice = input("Choose sorting criteria: ").strip()
+        choice = input("Choose option: ").strip()
 
         if choice == "1":
             title = input("Task title: ")

@@ -45,19 +45,19 @@ def test_show_all_tasks(user_with_tasks, capsys):
     assert "Task2 description" in captured.out
 
 
-    pattern4 = (
+    pattern1 = (
         r"\[✗\] Task1 - Task1 description "
         r"\(Created: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\) "
         r"\(Deadline: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\)"
     )
-    pattern3 = (
+    pattern2 = (
         r"\[✗\] Task2 - Task2 description "
         r"\(Created: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\) "
         r"\(Deadline: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\)"
     )
 
-    assert re.search(pattern4, captured.out)
-    assert re.search(pattern3, captured.out)
+    assert re.search(pattern1, captured.out)
+    assert re.search(pattern2, captured.out)
 
     assert user_with_tasks.count_tasks() == 2
 
