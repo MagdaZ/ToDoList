@@ -22,11 +22,11 @@ class ToDoList:
 
     def show_all_tasks(self):
         if not self.tasks:
-            print("Brak zadań.")
+            print("No tasks.")
         for task in self.tasks:
             status = "✓" if task.completed else "✗"
             deadline_str = f" (Deadline: {task.deadline.strftime('%Y-%m-%d %H:%M')})" if task.deadline else ""
-            print(f"[{status}] {task.title} - {task.description} (Utworzone: {task.date_created.strftime('%Y-%m-%d %H:%M')}){deadline_str}")
+            print(f"[{status}] {task.title} - {task.description} (Created: {task.date_created.strftime('%Y-%m-%d %H:%M')}){deadline_str}")
 
     def remove_task(self, title):
         task = self.find_task(title)
@@ -40,20 +40,20 @@ class ToDoList:
         for task in self.tasks:
             if task.completed:
                 deadline_str = f" (Deadline: {task.deadline.strftime('%Y-%m-%d %H:%M')})" if task.deadline else ""
-                print(f"[✓] {task.title} - {task.description} (Utworzone: {task.date_created.strftime('%Y-%m-%d %H:%M')}){deadline_str}")
+                print(f"[✓] {task.title} - {task.description} (Created: {task.date_created.strftime('%Y-%m-%d %H:%M')}){deadline_str}")
                 has_completed = True
         if not has_completed:
-            print("Brak wykonanych zadań.")
+            print("No tasks completed.")
 
     def show_pending_tasks(self):
         has_pending = False
         for task in self.tasks:
             if not task.completed:
                 deadline_str = f" (Deadline: {task.deadline.strftime('%Y-%m-%d %H:%M')})" if task.deadline else ""
-                print(f"[✗] {task.title} - {task.description} (Utworzone: {task.date_created.strftime('%Y-%m-%d %H:%M')}){deadline_str}")
+                print(f"[✗] {task.title} - {task.description} (Created: {task.date_created.strftime('%Y-%m-%d %H:%M')}){deadline_str}")
                 has_pending = True
         if not has_pending:
-            print("Brak zadań do wykonania.")
+            print("No tasks to do.")
 
     def mark_done(self, title):
         task = self.find_task(title)
@@ -82,7 +82,7 @@ class ToDoList:
         elif by == "priority":
             return sorted(self.tasks, key=lambda t: t.priority.value, reverse=reverse)
         else:
-            raise ValueError("Nieznane kryterium sortowania. Wybierz: title, created, deadline.")
+            raise ValueError("Invalid sorting criteria, select: title, created, deadline, priority.")
 
 
 

@@ -1,17 +1,17 @@
 [
     {
         "title": "A",
-        "description": "Pierwsze zadanie",
+        "description": "Description A",
         "completed": false,
-        "date_created": "2025-08-14T19:55:56.921025",
+        "date_created": "2025-08-21T10:58:20.407306",
         "deadline": null,
         "priority": "HIGH"
     },
     {
         "title": "B",
-        "description": "Drugie zadanie",
+        "description": "description B",
         "completed": true,
-        "date_created": "2025-08-14T19:55:56.921025",
+        "date_created": "2025-08-21T10:58:20.407306",
         "deadline": null,
         "priority": "LOW"
     }

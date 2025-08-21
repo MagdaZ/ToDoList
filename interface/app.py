@@ -6,80 +6,80 @@ from todo.task import Priority
 def main():
 
 
-    user_name = input("Podaj swoje imię: ").strip()
+    user_name = input("Enter your name: ").strip()
     user = User(user_name)
 
     filename = user.get_filename()
     if os.path.exists(filename):
         user.load_tasks_from_file()
-        print(f"Wczytano zadania z pliku {filename}")
+        print(f"Tasks loaded from file {filename}")
     else:
-        print("Brak zapisanych zadań, zaczynamy od nowa.")
+        print("No saved tasks, starting over.")
 
     while True:
         print("\nMenu:")
-        print("1. Dodaj zadanie")
-        print("2. Pokaż wszystkie zadania")
-        print("3. Pokaż wykonane zadania")
-        print("4. Pokaż do zrobienia zadania")
-        print("5. Oznacz zadanie jako wykonane")
-        print("6. Usuń zadanie")
-        print("7. Zapisz i wyjdź")
-        print("8. Sortuj")
+        print("1. Add task")
+        print("2. Show all tasks")
+        print("3. Show completed tasks")
+        print("4. Show tasks to do")
+        print("5. Mark task as a completed")
+        print("6. Remove task")
+        print("7. Save and exit")
+        print("8. Sorting")
 
-        choice = input("Wybierz opcj sortowania: ").strip()
+        choice = input("Choose sorting criteria: ").strip()
 
         if choice == "1":
-            title = input("Tytuł zadania: ")
-            description = input("Opis zadania: ")
-            deadline_str = input("Podaj deadline (format RRRR-MM-DD HH:MM) lub zostaw puste: ")
+            title = input("Task title: ")
+            description = input("Task description: ")
+            deadline_str = input("Enter deadline deadline (format RRRR-MM-DD HH:MM) or keep empty: ")
             if deadline_str:
                 try:
                     deadline = datetime.strptime(deadline_str, "%Y-%m-%d %H:%M")
                 except ValueError:
-                    print("Niepoprawny format daty. Zadanie zostanie utworzone bez deadline’u.")
+                    print("Incorrect date format. The task will be created without a deadline.")
                     deadline = None
             else:
                 deadline = None
-            print("Wybierz priorytet: 1.Low  2.Medium  3.High")
-            prio_choice = input("Twój wybór: ").strip()
+            print("Choose priority: 1.Low  2.Medium  3.High")
+            prio_choice = input("Your choice: ").strip()
             priority_map = {"1": Priority.LOW, "2": Priority.MEDIUM, "3": Priority.HIGH}
             priority = priority_map.get(prio_choice, Priority.MEDIUM)
             user.add_task(title, description, deadline=deadline, priority=priority)
 
-            print("\nDodano zadanie.")
+            print("\nTask added.")
         elif choice == "2":
-            print("\nTwoje zadania: ")
+            print("\nYour tasks: ")
             user.show_all_tasks()
         elif choice == "3":
-            print("\nTwoje zadania wykonane: ")
+            print("\nYour completed tasks: ")
             user.show_completed_tasks()
         elif choice == "4":
-            print("\nTwoje zadania do wykonania: ")
+            print("\nYour tasks to do: ")
             user.show_pending_tasks()
         elif choice == "5":
-            title = input("Podaj tytuł zadania do oznaczenia jako wykonane: ")
+            title = input("Enter the title of the task to mark as completed: ")
             if user.complete_task(title):
-                print("Zadanie oznaczone jako wykonane.")
+                print("Task marked as completed.")
             else:
-                print("Nie znaleziono zadania o takim tytule.")
+                print("No task with this title found.")
         elif choice == "6":
-            title = input("Podaj tytuł zadania do usunięcia: ")
+            title = input("Enter the task title to remove: ")
             if user.remove_task(title):
-                print("Zadanie usunięte.")
+                print("Task removed.")
             else:
-                print("Nie znaleziono zadania o takim tytule.")
+                print("No task with this title found.")
         elif choice == "7":
             user.save_tasks_to_file()
-            print("Zapisano zadania. Do widzenia!")
+            print("Task saved, Bye")
             break
         elif choice == "8":
-            print("Sortuj według: ")
-            print("1. Tytuł")
-            print("2. Data utworzenia")
+            print("Sorting criteria: ")
+            print("1. Title")
+            print("2. Creation date")
             print("3. Deadline")
-            print("4. Priorytet")
-            sort_choice = input("Wybierz: ").strip()
+            print("4. Priority")
+            sort_choice = input("Choose: ").strip()
             sort_map = {
                 "1":"title",
                 "2":"created",
@@ -92,11 +92,11 @@ def main():
                     status = "✓" if task.completed else "✗"
                     deadline_str = f" (Deadline: {task.deadline.strftime('%Y-%m-%d %H:%M')})" if task.deadline else ""
                     print(
-                        f"[{status}] {task.title} - {task.description} (Utworzone: {task.date_created.strftime('%Y-%m-%d %H:%M')}){deadline_str} [Priority: {task.priority.name}]")
+                        f"[{status}] {task.title} - {task.description} (Created: {task.date_created.strftime('%Y-%m-%d %H:%M')}){deadline_str} [Priority: {task.priority.name}]")
             else:
-                print("Nieprawidłowy wybór.")
+                print("Invalid choice.")
         else:
-            print("Nieprawidłowa opcja. Spróbuj ponownie.")
+            print("Invalid option, please try again.")
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ from todo.user import User
 from todo.task import Task, Priority
 from datetime import datetime, timedelta
 from todo.todolist import ToDoList
+from py.xml import html
 
 @pytest.fixture
 def user():
@@ -13,8 +14,8 @@ def user():
 def user_with_tasks():
     user = User("Magda")
     from datetime import datetime, timedelta
-    user.add_task("Zadanie4", "Opis zadania 4", deadline=datetime.now() + timedelta(days=1))
-    user.add_task("Zadanie3", "Opis zadania 3", deadline=datetime.now() + timedelta(days=2))
+    user.add_task("Task1", "Task1 description", deadline=datetime.now() + timedelta(days=1))
+    user.add_task("Task2", "Task2 description", deadline=datetime.now() + timedelta(days=2))
     return user
 
 @pytest.fixture
@@ -39,9 +40,9 @@ def user_with_1_completed_and_2_pending():
 def sample_tasks():
     now = datetime.now()
     return [
-        Task("Zadanie 1", "Opis 1", deadline=now + timedelta(days=1), priority=Priority.LOW),
-        Task("Zadanie 2", "Opis 2", deadline=now + timedelta(days=2), priority=Priority.MEDIUM),
-        Task("Zadanie 3", "Opis 3", deadline=now + timedelta(days=3), priority=Priority.HIGH)
+        Task("Task 1", "Description 1", deadline=now + timedelta(days=1), priority=Priority.LOW),
+        Task("Task 2", "Description 2", deadline=now + timedelta(days=2), priority=Priority.MEDIUM),
+        Task("Task 3", "Description 3", deadline=now + timedelta(days=3), priority=Priority.HIGH)
     ]
 
 @pytest.fixture
@@ -51,21 +52,20 @@ def todo_with_sample_tasks(sample_tasks):
         todo.add_task(task)
     return todo
 
-# Dodajemy kolumnę Description w raporcie HTML
-def pytest_html_results_table_header(cells): #Funkcja modyfikuje nagłówek tabeli wyników HTML, dodając nową kolumnę "Description" jako drugą kolumnę (insert(1, ...)).
-    cells.insert(1, "Description") #cells to lista nagłówków tabeli (np. "Test", "Outcome", itp.).
+# New column with description in the HTML report
+def pytest_html_results_table_header(cells):
+    cells.insert(1, html.th("Description"))
 
-def pytest_html_results_table_row(report, cells): #report to obiekt TestReport, który opisuje wynik pojedynczego testu.
-    desc = getattr(report, "description", "") # pobiera pole description, jeśli istnieje, inaczej zwraca pusty string
-    cells.insert(1, desc) #wstawia opis testu do drugiej kolumny wiersza
+def pytest_html_results_table_row(report, cells):
+    desc = getattr(report, "description", "")
+    cells.insert(1, html.td(desc))
 
-# Poprawny hookwrapper dla pytest_runtest_makereport w pytest 8+
-@pytest.hookimpl(hookwrapper=True) #Dekorator hookwrapper=True mówi pytest: „to generator, najpierw wykonaj standardowy hook, potem mogę dodać własną logikę”.
+#  hookwrapper
+@pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    # yield uruchamia standardową logikę pytest
-    outcome = yield #w tym miejscu pytest wykonuje normalną logikę testu (setup, call, teardown) i tworzy obiekt raportu.
-    report = outcome.get_result()  # to jest obiekt TestReport
 
-    # Dodajemy docstring testu do raportu
+    outcome = yield
+    report = outcome.get_result()
+
     doc = getattr(item.function, "__doc__", "")
     report.description = doc.strip() if doc else ""

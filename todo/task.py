@@ -25,18 +25,18 @@ class Task:
 
     def __str__(self):
         status = "[✓]" if self.completed else "[✗]"
-        base = f"{status} {self.title} - {self.description} (Utworzone: {self.date_created.strftime('%Y-%m-%d %H:%M')})"
+        base = f"{status} {self.title} - {self.description} (Created: {self.date_created.strftime('%Y-%m-%d %H:%M')})"
         if self.deadline:
             base += f" (Deadline: {self.deadline.strftime('%Y-%m-%d %H:%M')})"
         priority_str = self.priority.name if self.priority else "Brak"
-        base += f" (Priorytet: {priority_str})"
+        base += f" (Priority: {priority_str})"
         return base
 
     def mark_done(self):
-        self.completed = True #metoda do oznaczania jako done
+        self.completed = True
 
     def is_done(self):
-        return self.completed #metoda do sprawdzania czy jest done
+        return self.completed
 
     def to_dict(self):
         return {
@@ -51,7 +51,7 @@ class Task:
     @classmethod
     def from_dict(cls, data):
         deadline = datetime.fromisoformat(data["deadline"]) if data.get("deadline") else None
-        # Bezpieczne odczytanie priorytetu
+        # check priority
         try:
             priority_str = data.get("priority", "MEDIUM")
             priority = Priority[priority_str] if priority_str in Priority.__members__ else Priority.MEDIUM

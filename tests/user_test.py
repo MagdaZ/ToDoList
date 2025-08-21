@@ -10,51 +10,49 @@ from datetime import datetime, timedelta
 
 
 def test_add_task(user):
-    """Dodawanie taska"""
-    user.add_task("Zrobić zakupy", "Kupić mleko i chleb")
+    """Add task"""
+    user.add_task("Shopping", "Buy bread and milk")
 
-    task = user.find_task("Zrobić zakupy")
+    task = user.find_task("Shopping")
     assert task is not None
-    assert task.title == "Zrobić zakupy"
-    assert task.description == "Kupić mleko i chleb"
+    assert task.title == "Shopping"
+    assert task.description == "Buy bread and milk"
     assert not task.is_done()
 
 def test_complete_task(user):
-    """Zaznaczanie taska jako zrobionego"""
-    #user = User("Magda")
-    user.add_task("Ćwiczenia", "15 minut jogi")
-    user.complete_task("Ćwiczenia")
-    task = user.find_task("Ćwiczenia")
+    """Mark task as a completed"""
+    user.add_task("Training", "Yoga 15 min")
+    user.complete_task("Training")
+    task = user.find_task("Training")
     assert task.is_done()
 
 def test_remove_task(user):
-    """Usuwanie taska"""
-    #user = User("Magda")
-    user.add_task("Zadanie testowe", "Test")
+    """Remove task"""
+    user.add_task("Cooking", "Dinner")
 
-    assert user.remove_task("Zadanie testowe") is True
-    assert user.find_task("Zadanie testowe") is None
+    assert user.remove_task("Cooking") is True
+    assert user.find_task("Cooking") is None
 
 
 def test_show_all_tasks(user_with_tasks, capsys):
-    """Wyświetlanie wszystkich tasków"""
+    """Show all tasks"""
     user_with_tasks.show_all_tasks()
     captured = capsys.readouterr()
 
-    assert "Zadanie4" in captured.out
-    assert "Opis zadania 4" in captured.out
-    assert "Zadanie3" in captured.out
-    assert "Opis zadania 3" in captured.out
+    assert "Task1" in captured.out
+    assert "Task1 description" in captured.out
+    assert "Task2" in captured.out
+    assert "Task2 description" in captured.out
 
-    # Sprawdzenie, że data jest w formacie (YYYY-MM-DD HH:MM)
+
     pattern4 = (
-        r"\[✗\] Zadanie4 - Opis zadania 4 "
-        r"\(Utworzone: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\) "
+        r"\[✗\] Task1 - Task1 description "
+        r"\(Created: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\) "
         r"\(Deadline: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\)"
     )
     pattern3 = (
-        r"\[✗\] Zadanie3 - Opis zadania 3 "
-        r"\(Utworzone: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\) "
+        r"\[✗\] Task2 - Task2 description "
+        r"\(Created: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\) "
         r"\(Deadline: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\)"
     )
 
@@ -65,20 +63,18 @@ def test_show_all_tasks(user_with_tasks, capsys):
 
 
 def test_show_completed_tasks(user_with_pending_and_completed_tasks, capsys):
-    """Wuświetlanie tasków zrobionych"""
+    """Show completed tasks"""
     user = user_with_pending_and_completed_tasks
     user.show_completed_tasks()
     captured = capsys.readouterr()
 
-    # Sprawdź, że w output jest zadanie A z opisem i datą
     pattern = (
         r"\[✓\] A - a "
-        r"\(Utworzone: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\) "
+        r"\(Created: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\) "
         r"\(Deadline: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\)"
     )
     assert re.search(pattern, captured.out)
 
-    # Zadanie B nie powinno być w completed, więc nie powinno się pojawić w output
     assert "- B" not in captured.out
     assert "b" not in captured.out
 
@@ -86,18 +82,16 @@ def test_show_completed_tasks(user_with_pending_and_completed_tasks, capsys):
 
 
 def test_show_pending_tasks(user_with_pending_and_completed_tasks, capsys):
-    """Wyświtlanie tasków czekających na zrobienie"""
+    """Show pending tasks"""
     user = user_with_pending_and_completed_tasks
     user.show_pending_tasks()
     captured = capsys.readouterr()
 
-    # Zadanie A nie powinno być w pending
     assert "[✓] A - a" not in captured.out
 
-    # Sprawdź, że w output jest zadanie B z opisem i datą
     pattern = (
         r"\[✗\] B - b "
-        r"\(Utworzone: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\) "
+        r"\(Created: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\) "
         r"\(Deadline: \d{4}-\d{2}-\d{2} \d{2}:\d{2}\)"
     )
     assert re.search(pattern, captured.out)
@@ -106,82 +100,80 @@ def test_show_pending_tasks(user_with_pending_and_completed_tasks, capsys):
 
 
 def test_show_completed_tasks_empty(user,capsys):
-    """Żaden task nie był wykonany"""
+    """No tasks completed"""
     user.show_completed_tasks()
     captured = capsys.readouterr()
-    assert "Brak wykonanych zadań." in captured.out
+    assert "No tasks completed." in captured.out
 
 def test_show_pending_tasks_empty(user,capsys):
-    """Żaden task nie czeka na wykonanie"""
+    """No pending tasks"""
     user.show_pending_tasks()
     captured = capsys.readouterr()
-    assert "Brak zadań do wykonania." in captured.out
+    assert "No tasks to do." in captured.out
 
 def test_tasks_with_same_description(user):
-    """Taski z takim samym opisem"""
-    user.add_task("Z1", "opis")
-    user.add_task("Z2", "opis")
-    user.complete_task("Z1")
+    """Tasks with the same description"""
+    user.add_task("Task1", "Description")
+    user.add_task("Task2", "Description")
+    user.complete_task("Task1")
     assert user.count_completed_tasks() == 1
     assert user.count_pending_tasks() == 1
 
 def test_count_completed(user_with_1_completed_and_2_pending):
-    """Liczenie ile tasków jest wykonanych"""
+    """How many tasks is completed"""
     assert user_with_1_completed_and_2_pending.count_completed_tasks() == 1
 
 def test_task_has_date():
-    """Sprawdzanie czy data utworzenia taska jest dodana"""
-    task = Task("Zadanie", "Opis")
+    """Checking if the task creation date is added"""
+    task = Task("Task", "Description")
     assert task.date_created is not None
     assert isinstance(task.date_created, datetime)
 
 def test_task_with_deadline(user):
-    """Sprawdzanie czy task ma dodany deadline"""
+    """Checking if the task has deadline"""
     deadline = datetime.now() + timedelta(days=3)
-    user.add_task("Test z deadline", "Opis", deadline=deadline)
-    task = user.find_task("Test z deadline")
+    user.add_task("Task with deadline", "Description", deadline=deadline)
+    task = user.find_task("Task with deadline")
     assert task is not None
     assert task.deadline is not None
     assert abs((task.deadline - deadline).total_seconds()) < 1  # prawie równe
 
 def test_task_list_debug():
-    """Debugowanie listy tasków"""
+    """Task list debug"""
     todo = ToDoList()
-    todo.add_task(Task("A", "Opis 1", priority=Priority.LOW))
-    todo.add_task(Task("B", "Opis 2", completed=True, priority=Priority.HIGH))
+    todo.add_task(Task("A", "Description 1", priority=Priority.LOW))
+    todo.add_task(Task("B", "Description 2", completed=True, priority=Priority.HIGH))
 
     assert len(todo.tasks) == 2
 
 def test_task_priority_set():
-    """Sprawdzanie czy task ma ustawiony priorytet"""
-    # Tworzymy przykładowe zadanie
-    task = Task("Test", "Opis testowy", priority=Priority.HIGH)
+    """Checking if the task has priority"""
+    task = Task("Task", "Description", priority=Priority.HIGH)
 
-    # Sprawdzamy, czy priorytet został ustawiony poprawnie
     assert task.priority == Priority.HIGH
     assert task.priority.name == "HIGH"
 
 @pytest.mark.parametrize("priority", [Priority.LOW, Priority.MEDIUM, Priority.HIGH])
 def test_priority_saved_and_loaded_all_levels(tmp_path, priority):
-    """Sprawdzanie zadań z priorytetami"""
-    # Tworzymy listę z jednym zadaniem i danym priorytetem
+    """Checking tasks with priorities"""
+
     todo = ToDoList()
-    todo.add_task(Task("Test", "Opis", priority=priority))
+    todo.add_task(Task("Task", "Description", priority=priority))
 
 
-    file_path = tmp_path / "tasks.json"     # Ścieżka do pliku tymczasowego
-    todo.save_to_file(str(file_path))     # Zapisujemy do pliku
-    new_todo = ToDoList()     # Wczytujemy z nowej instancji
+    file_path = tmp_path / "tasks.json"
+    todo.save_to_file(str(file_path))
+    new_todo = ToDoList()
     new_todo.load_from_file(str(file_path))
-    loaded_task = new_todo.find_task("Test")     # Pobieramy zadanie po tytule
+    loaded_task = new_todo.find_task("Task")
 
-    assert loaded_task.priority == priority, (     # Sprawdzamy czy priorytet się zgadza
-        f"Priorytet wczytanego zadania ({loaded_task.priority}) "
-        f"różni się od zapisanego ({priority})"
+    assert loaded_task.priority == priority, (
+        f"Loaded task priority ({loaded_task.priority}) "
+        f"different from the one written down ({priority})"
     )
 
 def test_priority_saved_and_loaded_multiple_tasks(tmp_path, sample_tasks):
-    """Sprawdzanie tasków"""
+    """Checking tasks"""
     todo = ToDoList()
     for task in sample_tasks:
         todo.add_task(task)
